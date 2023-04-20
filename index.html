@@ -5,17 +5,33 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SpaceX</title>
+  <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="container">
     <h1 class="title title--main">SpaceX Information</h1>
-    <div class=" company company__wrapper"> </div>
-    <div class="company__info"></div>
-    <div class="launches__info"></div>
-    <button class="rockets__button"> Show rockets </button>
-    <div class="rockets__info"></div>
+    <div class="company__wrapper wrapper">
+      <div class="company__card card">
+        <h2 class="title title--card">Company info</h2>
+        <div class="company__info"></div>
+      </div>
+    </div>
+    <div class="launch__wrapper wrapper">
+      <div class="launch__wrapper--buttons">
+        <button class="launch__button--latest button">Show latest launch</button>
+        <button class="launch__button--next button">Show next launch</button>
+      </div>
+      <div class="launch__card card">
+        <h2 class="title title--card">Launch info</h2>
+        <div class="launch__info"></div>
+      </div>
+    </div>
+    <div class="rockets__wrapper wrapper">
+      <button class="rockets__button button"> Show rockets </button>
+      <div class="rockets__info"></div>
+    </div>
   </div>
   
-  <script src="/script.js" type="module" ></script>
+  <script src="/js/script.js" type="module" ></script>
 </body>
 </html>
