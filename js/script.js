@@ -3,10 +3,14 @@ import SpaceXService from "./api.js";
 const spaceX = new SpaceXService();
 const buttonLatestLaunch = document.querySelector('.launch__button--latest')
 const buttonNextLaunch = document.querySelector('.launch__button--next')
-const buttonRocket = document.querySelector('.rockets__button');
+const buttonRocket = document.querySelector('.rocket__button');
 const companyInfo = document.querySelector('.company__info');
 const rocketsInfo = document.querySelector('.rockets__info');
+const rocketWrapper = document.querySelector('.rockets__wrapper')
 const launchInfo = document.querySelector('.launch__info');
+const launchTitle = document.getElementById('launchCardTitle')
+
+rocketWrapper.style.display = 'none';
 
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -53,11 +57,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 buttonRocket.addEventListener('click', () => {
-  if (rocketsInfo.style.display === 'none') {
-    rocketsInfo.style.display = 'flex';
-  } else {
-    rocketsInfo.style.display = 'none';
-  }
+  rocketWrapper.style.display = (rocketWrapper.style.display === 'none') ? 'flex' : 'none';
+  buttonRocket.textContent = (buttonRocket.textContent === 'Show rockets') ? 'Hide rockets' : 'Show rockets';
 });
 
   async function findRocKetById(id){
@@ -89,6 +90,9 @@ buttonRocket.addEventListener('click', () => {
       console.error('Error getting latest launch info:', error.message);
       launchInfo.textContent = 'Error getting latest launch info.';
     }
+    buttonNextLaunch.disabled = false;
+    buttonLatestLaunch.disabled = true;
+    launchTitle.textContent = 'Latest launch info'
   })
 
   buttonNextLaunch.addEventListener("click", async () => {
@@ -104,6 +108,9 @@ buttonRocket.addEventListener('click', () => {
       console.error('Error getting latest launch info:', error.message);
       launchInfo.textContent = 'Error getting latest launch info.';
     }
+    buttonLatestLaunch.disabled = false;
+    buttonNextLaunch.disabled = true;
+    launchTitle.textContent = 'Next launch info'
   })
 
   async function buildLaunchCard(data){

@@ -16,9 +16,15 @@
     --fs-large-title: 56px;
 }
 
-a { text-decoration: none;}
+html {
+    scroll-behavior: smooth;
+}
 
-a:link {color: inherit;}
+a { text-decoration: underline}
+
+a:link {
+    color: inherit;
+}
 
 a:visited {color: inherit;}
 
@@ -42,7 +48,7 @@ body{
 
 .title{
     color: var(--clr-accent);
-    letter-spacing: 0.5em;
+    letter-spacing: 0.4em;
 }
 
 .title--main{
@@ -57,7 +63,7 @@ body{
 }
 .wrapper{
     margin-bottom: 40px;
-    min-width: 500px;
+    width: 80%;
 }
 
 .company__card{
@@ -74,7 +80,7 @@ body{
     line-height: 28px;
     border-radius: 20px;
     background-color: transparent;
-    box-shadow: 0px 0px 25px var(--clr-card) ;
+    box-shadow: inset 0px 0px 25px var(--clr-card) ;
 }
 
 .launch__wrapper{
@@ -89,6 +95,7 @@ body{
     flex-direction: column;
     justify-content: space-between;
     min-height: 150px;
+    margin-right: 50px;
 }
 .launch__card{
     min-height: 250px;
@@ -108,9 +115,26 @@ body{
     border-radius: 20px;
     font-size: 20px;
     cursor: pointer;
+    transition: opacity 0.35s ease-in-out;
+    margin-bottom: 10px;
+    min-width: 210px;
 }
+.button[disabled] {
+    background-color: var(--clr-card);
+    opacity: 0.5;
+}
+.button:hover{
+    box-shadow: 0px 0px 10px var(--clr-card) ;
+}
+
 strong{
     color:var(--clr-accent)
+}
+
+.rockets__wrapper{
+    flex-direction: column;
+    align-items:center;
+    justify-content: center;
 }
 
 .rockets__info{
@@ -119,10 +143,13 @@ strong{
     flex-wrap: wrap;
     justify-content: space-around;
 }
+
 .rocket__card{
-    max-width: 600px;
+    max-width: 500px;
     margin-bottom: 30px;
 }
+
+
 .rocket__img{
     width: 100%;
     max-height: 350px;
