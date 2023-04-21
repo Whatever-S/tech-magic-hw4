@@ -60,6 +60,7 @@ body{
 .title--card{
     font-size: var(--fs-regular-title);
     margin: 20px auto;
+    line-height: 40px;
 }
 .wrapper{
     margin-bottom: 40px;
@@ -73,8 +74,9 @@ body{
     align-items:baseline;
     justify-content: center;
 }
+
 .card{
-    min-width: 500px;
+    min-width: 400px;
     font-size: 20px;
     padding: 20px;
     line-height: 28px;

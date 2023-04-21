@@ -1,4 +1,6 @@
 import SpaceXService from "./api.js";
+import SpaceXError from "./error.js";
+import {launchCard, companyCard, rocketCard} from "./ui.js";
 
 const spaceX = new SpaceXService();
 const buttonLatestLaunch = document.querySelector('.launch__button--latest')
@@ -17,48 +19,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const data = await spaceX.getCompanyInfo();
       if (data) {
-        companyInfo.innerHTML = `
-        <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Founder:</strong> ${data.founder}</p>
-        <p><strong>Founded:</strong> ${data.founded}</p>
-        <p><strong>Employees:</strong> ${data.employees}</p>
-        <p><strong>Summary:</strong> ${data.summary}</p>
-        <p><strong>Link:</strong> <a href="${data.links.website}" target="_blank">${data.links.website}</a></p>
-      `;
+        companyInfo.innerHTML = companyCard(data) ;
       } else {
         companyInfo.textContent = 'No summary available.';
       }
-    } catch (error) {
-      console.error('Error getting company info:', error.message);
-      companyInfo.textContent = 'Error getting company info.';
+    }catch (error) {
+      if (error instanceof SpaceXError) {
+        console.error('SpaceX error:', error.message);
+        companyInfo.textContent = 'Error getting company info.';
+      } else {
+        console.error('Unknown error:', error.message);
+        companyInfo.textContent = 'Ups, error...';
+      }
     }
 
     try {
       const rockets = await spaceX.getSpaceXRocketsInfo();
-      const rocketCards = rockets.map((rocket) => `
-        <div class="rocket__card card">
-        <img class="rocket__img" src="${rocket.images[1]}" alt="${rocket.name}" onerror="this.onerror=null; this.src='img/patch.png';">
-          <h2 class="title title--card">${rocket.name}</h2>
-          <p>${rocket.description}</p>
-          <ul>
-            <li><strong>Country:</strong> ${rocket.country}</li>
-            <li><strong>Active:</strong> ${rocket.active ? 'Yes' : 'No'}</li>
-            <li><strong>Size parameters:</strong> Height: ${rocket.height }m, diameter: ${rocket.diameter} m, mass: ${rocket.mass} kg </li>
-            <li><strong>Cost per launch:</strong> $${rocket.cost_per_launch.toLocaleString()}</li>
-            <li><a href="${rocket.wikipedia}" target="_blank">Wikipedia</a></li>
-          </ul>
-        </div>
-      `);
+      const rocketCards = rockets.map((rocket) => rocketCard(rocket));
       rocketsInfo.innerHTML = rocketCards.join('');
     } catch (error) {
-      console.error(error);
+      if (error instanceof SpaceXError) {
+        console.error('SpaceX error:', error.message);
+        rocketsInfo.textContent = 'SpaceXError getting rockets.';
+      } else {
+        console.error('Error getting rockets:', error.message);
+        rocketsInfo.textContent = 'Error getting rockest.';
+      }
     }
-});
-
-
-buttonRocket.addEventListener('click', () => {
-  rocketWrapper.style.display = (rocketWrapper.style.display === 'none') ? 'flex' : 'none';
-  buttonRocket.textContent = (buttonRocket.textContent === 'Show rockets') ? 'Hide rockets' : 'Show rockets';
 });
 
   async function findRocKetById(id){
@@ -67,14 +54,17 @@ buttonRocket.addEventListener('click', () => {
       if(rocketData ){
         return rocketData.name
       }else {
-        return 'No available rocket name.';
+        return 'No available.';
       }
     }
     catch (error) {
-      console.error('Error getting latest launch info:', error.message);
-      launchInfo.textContent = 'Error getting latest launch info.';
+      if (error instanceof SpaceXError) {
+        console.error('SpaceX error:', error.message);
+      } else {
+        console.error('Error getting rocket:', error.message);
+      }
     }
-    }
+  }
   
 
   buttonLatestLaunch.addEventListener("click", async () => {
@@ -86,13 +76,18 @@ buttonRocket.addEventListener('click', () => {
       } else {
         launchInfo.textContent = 'No data available.';
       }
+      buttonNextLaunch.disabled = false;
+      buttonLatestLaunch.disabled = true;
+      launchTitle.textContent = 'Latest launch info'
     } catch (error) {
-      console.error('Error getting latest launch info:', error.message);
-      launchInfo.textContent = 'Error getting latest launch info.';
+      if (error instanceof SpaceXError) {
+        console.error('SpaceX error:', error.message);
+        launchInfo.textContent = 'SpaceXError getting latest launch info.';
+      } else {
+        console.error('Error getting latest next  info:', error.message);
+        launchInfo.textContent = 'Error getting latest launch info.';
+      }
     }
-    buttonNextLaunch.disabled = false;
-    buttonLatestLaunch.disabled = true;
-    launchTitle.textContent = 'Latest launch info'
   })
 
   buttonNextLaunch.addEventListener("click", async () => {
@@ -104,23 +99,26 @@ buttonRocket.addEventListener('click', () => {
       } else {
         launchInfo.textContent = 'No data available.';
       }
+      buttonLatestLaunch.disabled = false;
+      buttonNextLaunch.disabled = true;
+      launchTitle.textContent = 'Next launch info'
     } catch (error) {
-      console.error('Error getting latest launch info:', error.message);
-      launchInfo.textContent = 'Error getting latest launch info.';
+      if (error instanceof SpaceXError) {
+        console.error('SpaceX error:', error.message);
+        launchInfo.textContent = 'SpaceXError getting next  launch info.';
+      } else {
+        console.error('Error getting next info:', error.message);
+        launchInfo.textContent = 'Error getting next launch info.';
+      }
     }
-    buttonLatestLaunch.disabled = false;
-    buttonNextLaunch.disabled = true;
-    launchTitle.textContent = 'Next launch info'
   })
+
+  buttonRocket.addEventListener('click', () => {
+    rocketWrapper.style.display = (rocketWrapper.style.display === 'none') ? 'flex' : 'none';
+    buttonRocket.textContent = (buttonRocket.textContent === 'Show rockets') ? 'Hide rockets' : 'Show rockets';
+  });
 
   async function buildLaunchCard(data){
     const rocketName = await findRocKetById(data.rocket);
-    launchInfo.innerHTML = `
-      <p><strong>Name:</strong> ${data.name}</p>
-      <p><strong>Date:</strong> ${data.date_local}</p>
-      <p><strong>Success:</strong> ${data.success}</p>
-      <p><strong>Rocket:</strong> ${rocketName}</p>
-      <p><strong>Links:</strong> <a href="${data.links.webcast}" target="_blank">${data.links.webcast}</a></p>
-      <img src="${data.links.patch.small ? data.links.patch.small : 'img/patch.png'}" alt="${data.name}">
-    `;
-  }
+    launchInfo.innerHTML = launchCard(data, rocketName);
+}
